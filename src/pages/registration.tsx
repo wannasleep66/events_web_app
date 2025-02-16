@@ -5,71 +5,109 @@ import {
     TextField,
     Button,
     FormControl,
-    FormLabel, Stack,
-} from "@mui/material";
-import * as React from "react";
-import {AutoAwesome} from "@mui/icons-material";
+    FormLabel,
+    Stack,
+} from '@mui/material'
+import * as React from 'react'
+import { AutoAwesome } from '@mui/icons-material'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import useTelegram from '../shared/hooks/useTelegram.ts'
+import { UserInput, userInputSchema } from '../user/schema.ts'
+import { useUserMutation } from '../user/mutations.ts'
 
 const Registration: React.FC = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<UserInput>({
+        reValidateMode: 'onChange',
+        resolver: zodResolver(userInputSchema),
+    })
+    const { user, query_id } = useTelegram()
+    const userMutation = useUserMutation()
+
+    const onSubmit: SubmitHandler<UserInput> = (data: UserInput): void => {
+        userMutation.mutate({
+            user: { ...data, id: user.id },
+            queryId: query_id,
+        })
+    }
+
     return (
-        <Container maxWidth="sm">
-            <Box sx={{padding: 4, borderRadius: 3, maxWidth: 600}}>
-                <Box sx={{display: "flex", gap: 2, mb: 2}}>
-                    <Typography variant={"h5"} gutterBottom>
-                        Привет, Wannasleep
+        <Container
+            maxWidth="sm"
+            sx={{
+                height: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+        >
+            <Box sx={{ padding: 4, borderRadius: 3, width: '100%' }}>
+                <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                    <Typography variant={'h5'} gutterBottom>
+                        Привет, {user?.username}
                     </Typography>
-                    <AutoAwesome color={"secondary"} fontSize={"large"}/>
+                    <AutoAwesome color={'secondary'} fontSize={'large'} />
                 </Box>
                 <Stack
+                    onSubmit={handleSubmit(onSubmit)}
                     component="form"
                     spacing={4}
+                    py={2}
                 >
                     <FormControl>
                         <FormLabel>Имя</FormLabel>
                         <TextField
-                            name={"name"}
-                            placeholder={"Введите ваше имя"}
-                            color={"primary"}
+                            placeholder={'Введите ваше имя'}
+                            color={'primary'}
                             variant="outlined"
                             fullWidth
-                            required
+                            {...register('username')}
+                            error={!!errors.username}
+                            helperText={errors.username?.message}
                         />
                     </FormControl>
                     <FormControl>
                         <FormLabel>Фамилия</FormLabel>
                         <TextField
-                            name={"surname"}
                             placeholder="Введите вашу фамилию"
                             variant="outlined"
                             fullWidth
-                            required
+                            {...register('surname')}
+                            error={!!errors.surname}
+                            helperText={errors.surname?.message}
                         />
                     </FormControl>
-                    <FormControl>
+                    <FormControl fullWidth={true}>
                         <FormLabel>Группа</FormLabel>
                         <TextField
-                            name={"group"}
                             placeholder="Введите группу"
                             variant="outlined"
                             fullWidth
-                            required
+                            {...register('group')}
+                            error={!!errors.group}
+                            helperText={errors.group?.message}
                         />
                     </FormControl>
                     <Button
-                        sx={{mt: 2, paddingY: '12px'}}
-                        variant={"contained"}
-                        color={"secondary"}
+                        sx={{ mt: 2, paddingY: '12px', justifySelf: 'end' }}
+                        variant={'contained'}
+                        color={'secondary'}
                         type="submit"
-                        size={"large"}
+                        size={'large'}
                     >
-                        <Typography variant={'body1'} sx={{color: 'white'}}>
+                        <Typography variant={'body1'} sx={{ color: 'white' }}>
                             Зарегистрироваться
                         </Typography>
                     </Button>
                 </Stack>
             </Box>
         </Container>
-    );
-};
+    )
+}
 
-export default Registration;
+export default Registration

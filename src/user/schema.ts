@@ -1,0 +1,24 @@
+import { z } from 'zod'
+
+export const userInputSchema = z.object({
+    username: z
+        .string()
+        .min(3, 'Минимальная длина имени 3 символа')
+        .max(20, 'Максимальная длина имени 20 символов'),
+    surname: z
+        .string()
+        .min(5, 'Минимальная длина фамилии 3 символа')
+        .max(20, 'Максимальная длина имени 20 символов'),
+    group: z
+        .string()
+        .min(5, 'Минимальная длина группы 5 символов')
+        .max(12, 'Максимальная длина для группы 12 символов'),
+})
+
+export type UserInput = z.infer<typeof userInputSchema>
+export type UserResponse = UserInput
+
+export type CreateUserInput = {
+    user: UserInput & { id: string }
+    queryId: string
+}

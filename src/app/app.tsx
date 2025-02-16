@@ -1,11 +1,14 @@
-import * as React from "react";
-import {RouterProvider} from "react-router";
-import router from "./router.tsx";
+import * as React from 'react'
+import { RouterProvider } from 'react-router'
+import router from './router.tsx'
+import QueryProvider from './query.tsx'
 
 const App: React.FC = () => {
     return (
-        <RouterProvider router={router}/>
-    );
-};
+        <QueryProvider>
+            <RouterProvider router={router} />
+        </QueryProvider>
+    )
+}
 
-export default App;
+export default App
