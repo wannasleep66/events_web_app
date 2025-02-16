@@ -99,11 +99,17 @@ const Registration: React.FC = () => {
                         color={'secondary'}
                         type="submit"
                         size={'large'}
+                        loading={userMutation.isPending}
                     >
                         <Typography variant={'body1'} sx={{ color: 'white' }}>
                             Зарегистрироваться
                         </Typography>
                     </Button>
+                    {userMutation.isError && (
+                        <Typography color={'error'}>
+                            Произошла ошибка
+                        </Typography>
+                    )}
                 </Stack>
             </Box>
         </Container>
