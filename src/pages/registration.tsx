@@ -30,7 +30,7 @@ const Registration: React.FC = () => {
 
     const onSubmit: SubmitHandler<UserInput> = (data: UserInput): void => {
         userMutation.mutate({
-            user: { ...data, id: user.id },
+            user: { ...data, id: user.id, telegram: user.username },
             queryId: query_id,
         })
     }

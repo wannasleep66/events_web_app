@@ -19,6 +19,6 @@ export type UserInput = z.infer<typeof userInputSchema>
 export type UserResponse = UserInput
 
 export type CreateUserInput = {
-    user: UserInput & { id: string }
+    user: UserInput & { id: string; telegram: string }
     queryId: string
 }
